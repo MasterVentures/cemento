@@ -1,26 +1,26 @@
-# solido
+# cemento
 
-Code first contract entity mapper for Solidity based blockchains like Ethereum, Vechain, Tron
+contract entity mapper for Solidity based blockchains like Ethereum, Vechain, Tron
 
 
 ## Latest version
 
-`1.1.3`
+`1.0.0`
 
 ## Installing
 
 ### Ethereum
-`npm i -S @decent-bet/solido @decent-bet/solido-provider-web3`
+`npm i -S @decent-bet/cemento @decent-bet/cemento-provider-web3`
 
 ### Vechain (Connex Framework)
-`npm i -S @decent-bet/solido @decent-bet/solido-provider-connex`
+`npm i -S @decent-bet/cemento @decent-bet/cemento-provider-connex`
 
 ### Vechain (server side or mobile)
-`npm i -S @decent-bet/solido @decent-bet/solido-provider-thorify`
+`npm i -S @decent-bet/cemento @decent-bet/cemento-provider-thorify`
 
-## What is solido
+## What is cemento
 
-Solido is a contract entity mapper, which annotates a Solidity contract based from its generated ABI. Once a contract is annotated with decorators or auto generated, you can enable it to a blockchain by using a plugin vendor.
+cemento is a contract entity mapper, which annotates a Solidity contract based from its generated ABI. Once a contract is annotated with decorators or auto generated, you can enable it to a blockchain by using a plugin vendor.
 
 The pluggable architecture allows different scenarios:
 
@@ -37,22 +37,22 @@ import { Framework } from '@vechain/connex-framework';
 import { DriverNodeJS } from '@vechain/connex.driver-nodejs';
 
 import {
-  SolidoModule,
-} from '@decent-bet/solido';
+  cementoModule,
+} from '@decent-bet/cemento';
 import {
  ConnexPlugin,
  ConnexSettings,
-} from '@decent-bet/solido-provider-connex';
+} from '@decent-bet/cemento-provider-connex';
 import {
  ThorifyPlugin,
  ThorifySettings,
-} from '@decent-bet/solido-provider-thorify';
+} from '@decent-bet/cemento-provider-thorify';
 import { EnergyTokenContract, EnergyContractImport } from './EnergyContract';
 import Web3 from 'web3';
 const { thorify } = require('thorify');
 
-// Create Solido Module
-export const module = new SolidoModule(
+// Create cemento Module
+export const module = new cementoModule(
   [
     {
       name: 'ConnexToken',
@@ -94,8 +94,8 @@ token.onReady<ThorifySettings>({
 
 ### Lazy loading contracts
 ```typescript
-// Create Solido Module
-export const module = new SolidoModule(
+// Create cemento Module
+export const module = new cementoModule(
   [
     {
       name: 'ConnexToken',
@@ -278,7 +278,7 @@ console.log(events);
 When you need to enable any contracts to support more than one provider, use the short module syntax. The provider name will be appended to the name.
 
 ```typescript
-export const module = new SolidoModule(
+export const module = new cementoModule(
   [
     {
       name: 'Token',
@@ -297,10 +297,10 @@ const balance = await token.methods.balanceOf();
 
 ### Dynamic Contract Entities
 
-To let Solido generate Read, Write and Event methods, set `enableDynamicStubs: true` in contract mapping entry and use `GetDynamicContract` to get the contract. The generated stubs are available in `contract.methods`.
+To let cemento generate Read, Write and Event methods, set `enableDynamicStubs: true` in contract mapping entry and use `GetDynamicContract` to get the contract. The generated stubs are available in `contract.methods`.
 
 ```typescript
-export const module = new SolidoModule(
+export const module = new cementoModule(
   [
     {
       name: 'ThorifyToken',
@@ -326,7 +326,7 @@ You can query any log event call with a fluent topic query. A contract event sig
 
 ```typescript
 // build query
-let topicQuery = new ConnexSolidoTopic();
+let topicQuery = new ConnexcementoTopic();
 topicQuery.topic(0, energy.topics.Transfer.signature);
 
 // set filter options
@@ -359,8 +359,8 @@ const subscription = blockConfirmation
 
 ### Plugins
 
-* (Vechain) Connex: [Solido Connex](https://github.com/decent-bet/solido-provider-connex)
-* (Vechain) Thorify: [Solido Thorify](https://github.com/decent-bet/solido-provider-thorify)
-* (Ethereum) Web3: [Solido Web3](https://github.com/decent-bet/solido-provider-web3)
-* Vue/Vuex: [Vuex Solido](https://github.com/decent-bet/vuex-solido)
+* (Vechain) Connex: [cemento Connex](https://github.com/decent-bet/cemento-provider-connex)
+* (Vechain) Thorify: [cemento Thorify](https://github.com/decent-bet/cemento-provider-thorify)
+* (Ethereum) Web3: [cemento Web3](https://github.com/decent-bet/cemento-provider-web3)
+* Vue/Vuex: [Vuex cemento](https://github.com/decent-bet/vuex-cemento)
 * Contract import generator for Truffle: [Connex Entity Builder](https://github.com/decent-bet/connex-entity-builder)
