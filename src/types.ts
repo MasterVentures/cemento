@@ -76,7 +76,7 @@ export interface EventFilterOptions<T> extends EventFilter<T> {
     name?: string;
 }
 
-export enum SolidoProviderType {
+export enum CementoProviderType {
     Connex = 'connex',
     Thorify = 'thorify',
     Web3 = 'web3',
@@ -106,4 +106,28 @@ export interface ThorifyLog {
     blockNumber: string;
     blockHash: string;
     transactionHash: string;
+}
+
+export interface CementoModuleConfig {
+    [key: string]: CementoBinder;
+}
+
+export interface CementoBinder {
+    connections: Array<CementoConnection>;
+    contracts: Array<CementoBindContract>;
+}
+
+export interface CementoBindContract {
+    abi: object;
+    name: string;
+    address?: string;
+    isContractFactory?: boolean;
+    connectionName: string[];
+}
+
+export interface CementoConnection {
+    provider: Object;
+    chainId: string;
+    defaultAccount?: string;
+    name: string;
 }

@@ -1,7 +1,7 @@
 
-import { ContractImport, SolidoProviderType } from '../types';
-import { SolidoContract } from './SolidoContract';
-import { SolidoProvider } from '..';
+import { CementoConnection, CementoBindContract, CementoModuleConfig, ContractImport, CementoProviderType } from '../types';
+import { CementoProvider } from '..';
+import { CementoContract } from './CementoContract';
 
 function applyMixins(derivedCtor: any, baseCtors: any[]) {
     baseCtors.forEach(baseCtor => {
@@ -29,11 +29,11 @@ export interface ContractProviderMapping {
 }
 
 export interface BindModuleContracts {
-    [key: string]: SolidoContract & SolidoProvider;
+    [key: string]: CementoContract & CementoProvider;
 }
 
 export interface ConnectedContracts {
-    [key: string]: (SolidoContract & SolidoProvider);
+    [key: string]: (CementoContract & CementoProvider);
 }
 /**
  * Contract collection stores the contracts
@@ -41,15 +41,15 @@ export interface ConnectedContracts {
 export class ContractCollection {
     private coll: BindModuleContracts = {};
 
-    add(key: string, c: SolidoContract & SolidoProvider) {
+    add(key: string, c: CementoContract & CementoProvider) {
         this.coll[key] = c;
     }
-    getContract<T>(key: string): T & SolidoContract & SolidoProvider {
+    getContract<T>(key: string): T & CementoContract & CementoProvider {
         return (this.coll[key] as any) as T &
-        SolidoContract &
-        SolidoProvider;
+        CementoContract &
+        CementoProvider;
     }
-    getDynamicContract(key: string): SolidoContract & SolidoProvider {
+    getDynamicContract(key: string): CementoContract & CementoProvider {
         return this.coll[key];
     }
 
@@ -59,7 +59,7 @@ export class ContractCollection {
     connect(): ConnectedContracts {
         const contracts = {};
         Object.keys(this.coll).forEach(i => {
-            const c = (this.coll[i] as SolidoContract);
+            const c = (this.coll[i] as CementoContract);
             c.connect();
             contracts[i] = c;
         })
@@ -70,21 +70,13 @@ export class ContractCollection {
 class Empty { }
 
 /**
- * A Solido Module binds a contract entity to Solido Decorators using mixins
+ * A Cemento Module binds a contract entity to Cemento Decorators using mixins
  */
-export class SolidoModule {
-    providers: SolidoProvider[];
+export class CementoModule {
+    providers: CementoProvider[];
     bindSetupOptions: ProviderInstances;
 
-    constructor(private contractMappings: ContractProviderMapping[], ...providers: any[]) {
-        this.providers = providers;
-    }
-
-    /**
-     * Adds a contract to a solido module
-     */
-    addContractMapping(contractProviderMapping: ContractProviderMapping) {
-        this.contractMappings.push(contractProviderMapping);
+    constructor(private binderContext: CementoModuleConfig) {
     }
 
     /**
@@ -102,26 +94,36 @@ export class SolidoModule {
      * Bind contracts
      * @param setupOptions provider setup options
      */
-    bindContracts(setupOptions?: ProviderInstances): ContractCollection {
-        const coll = new ContractCollection();
+    bindContracts(setupOptions?: ProviderInstances): Array<any> {
+        const coll: Array<any> = [];
 
         // if one contract mapping exists
         // and multiple providers
         // use short module syntax
-        if (this.contractMappings.length === 1 && this.providers.length > 0) {
-            const c = this.contractMappings[0];
-            this.providers.forEach((provider) => {
-                const name = c.name;
-                if (!name) {
-                    throw new Error('Must have a name for short module syntax');
-                }
-                this.bindContract(provider, c, coll, true, setupOptions);
-            })
-        } else {
-            this.contractMappings.map((c) => {
-                let provider = c.provider;
-                this.bindContract(provider, c, coll, false, setupOptions);
-            });
+        if (Object.keys(this.binderContext).length >= 1) {
+            //const c = this.contractMappings[0];
+            
+            // this.providers.forEach((provider) => {
+            //     const name = c.name;
+            //     if (!name) {
+            //         throw new Error('Must have a name for short module syntax');
+            //     }
+            //     this.bindContract(provider, c, coll, true, setupOptions);
+            // })
+            // Get First Binder
+            const firstKey = Object.keys(this.binderContext)[0];
+            let context = this.binderContext[firstKey];
+            if (context.connections.length >= 1 && context.contracts.length >= 1) {
+                context.connections.forEach((connection: CementoConnection) => {
+                    const contracts = context.contracts.filter((contract: CementoBindContract) => {
+                        return contract.connectionName.includes(connection.name);
+                    });
+
+                    contracts.forEach((contract) => {
+                        coll.push(this.bindContract(connection, contract, setupOptions));
+                    });
+                });
+            }
         }
 
         this.bindSetupOptions = setupOptions;
@@ -137,49 +139,39 @@ export class SolidoModule {
      * @param generateName If true, generates a name
      * @param setupOptions Provider instance config
      */
-    private bindContract(provider: any, c: ContractProviderMapping, collection: ContractCollection, generateName: boolean, setupOptions?: ProviderInstances) {
+    private bindContract(provider: CementoConnection, contractDefinition: CementoBindContract, setupOptions?: ProviderInstances) {
         if (!provider) {
-            throw new Error(`Missing provider for ${c.name}`);
-        }
-        if (!c && c.import) {
-            throw new Error(`Missing import for ${c.name}`);
-        }
-        // if no entity is added and dynamic, use an empty class
-        if (!c.entity && c.enableDynamicStubs) {
-            c.entity = Empty;
-        }
-
-        if (!c.entity && !c.enableDynamicStubs) {
-            throw new Error('Must provide an entity class');
+            throw new Error(`Missing provider for ${contractDefinition.name}`);
         }
 
         // Creates temp fn to clone prototype
+        let classFactory = Empty;
+
         const init: any = function fn() { }
-        init.prototype = Object.create(c.entity.prototype);
+        init.prototype = Object.create(classFactory.prototype);
 
-        // Apply provider and SolidoProvider Plugin to entity type
-        applyMixins(init, [provider, SolidoProvider]);
+        // Apply provider and CementoProvider Plugin to entity type
+        applyMixins(init, [{prototype: { chainId: provider.chainId, defaultAccount: provider.defaultAccount}}, provider.provider, CementoProvider]);
         const instance = new init();
-        instance.setContractImport(c.import);
-        if (c.enableDynamicStubs) {
-            instance.buildDynamicStubs();
-        }
+        instance.setBindContract(contractDefinition);
+        instance.buildDynamicStubs();
 
-        let name = c.name;
-        const providerKeyName = instance.getProviderType();
-        const providerName = SolidoProviderType[providerKeyName];
-        if (generateName) {
-            name = `${providerName}${c.name}`;
-        }
-        const contract = instance as SolidoContract & SolidoProvider;
-        collection.add(name, contract);
+        // let name = contractDefinition.name;
+        // const providerKeyName = instance.getProviderType();
+        // const providerName = CementoProviderType[providerKeyName];
+        // if (generateName) {
+        //     name = `${providerName}${c.name}`;
+        // }
+        const contract = instance as CementoContract & CementoProvider;
 
         if (setupOptions) {
             // find provider instance options
-            const instanceOptions = setupOptions[providerKeyName];
-            if (instanceOptions) {
-                contract.setInstanceOptions(instanceOptions);
-            }
+            // const instanceOptions = setupOptions[providerKeyName];
+            // if (instanceOptions) {
+            //     contract.setInstanceOptions(instanceOptions);
+            // }
         }
+
+        return contract;
     }
 }

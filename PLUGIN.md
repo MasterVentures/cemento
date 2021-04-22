@@ -1,6 +1,6 @@
 ## Provider plugin tutorial
 
-A provider implements a SolidoContract interface for a blockchain client API (eg Connex, Thorify, Web3) and extends SolidoProvider, which attaches an ABI import to a contract entity.
+A provider implements a SolidoContract interface for a blockchain client API (eg Connex, Thorify, Web3) and extends CementoProvider, which attaches an ABI import to a contract entity.
 
 ### Plugin interfaces
 

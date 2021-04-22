@@ -1,8 +1,8 @@
 import { IMethodOrEventCall, EventFilter } from '../types';
-import { ProviderInstance } from './SolidoModule';
+import { ProviderInstance } from './CementoModule';
 
 
-export interface SolidoSigner {
+export interface CementoSigner {
     payload?: any;
     requestSigning(): Promise<any>;
 }
@@ -10,9 +10,10 @@ export interface SolidoSigner {
 /**
  * A Solido contract is an interface for a contract entity to use the low level methods that are called by the decorators.
  */
-export interface SolidoContract {
+export interface CementoContract {
     address: string;
     defaultAccount: string;
+    chainId: string;
 
     /**
      * Describes a contract chain tag, address and owner
@@ -29,7 +30,7 @@ export interface SolidoContract {
         methodCall: any,
         options: IMethodOrEventCall,
         args: any[]
-    ): Promise<SolidoSigner>;
+    ): Promise<CementoSigner>;
 
     /**
      * Gets an ABI definition
