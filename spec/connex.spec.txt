@@ -4,7 +4,7 @@ import { EnergyTokenContract, EnergyContractImport } from './EnergyContract';
 import { Read, Write, GetEvents } from '../src/decorators';
 import { IMethodOrEventCall, EventFilterOptions } from '../src/types';
 import { ConnexSolidoTopic } from '../src/providers/connex/ConnexSolidoTopic';
-import { SolidoModule, ConnexPlugin, ThorifyPlugin, SolidoProvider, SolidoContract } from '../src';
+import { SolidoModule, ConnexPlugin, ThorifyPlugin, CementoProvider, SolidoContract } from '../src';
 
 describe('Connex Provider', () => {
     describe('#ConnexPlugin', () => {

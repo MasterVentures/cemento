@@ -4,7 +4,7 @@ import { ThorifySettings } from '../src/providers/thorify/ThorifySettings';
 import { ConnexPlugin } from '../src/providers/connex/ConnexPlugin';
 import { EnergyTokenContract, EnergyContractImport } from './EnergyContract';
 import BigNumber from 'bignumber.js';
-import { SolidoProviderType } from '../src';
+import { CementoProviderType } from '../src';
 const Web3 = require('web3');
 const { thorify } = require('thorify');
 

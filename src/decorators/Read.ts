@@ -1,10 +1,10 @@
 import { validate } from './Utils';
 import { IMethodOrEventCall } from '../types';
-import { SolidoContract } from '../core/SolidoContract';
+import { CementoContract } from '../core/CementoContract';
 
 export function _Read(
     name: string,
-    contract: SolidoContract,
+    contract: CementoContract,
     args: any[],
     options: IMethodOrEventCall = {}
 ) {
