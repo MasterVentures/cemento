@@ -16,8 +16,7 @@ describe('ThorifyProvider', () => {
         let thor;
         let tokenContract: EnergyTokenContract & SolidoContract & CementoProvider;
         beforeEach(async () => {
-            const privateKey =
-        '0xdce1443bd2ef0c2631adc1c67e5c93f13dc23a41c18b536effbbdcbcdb96fb65';
+            const privateKey = '';
             const chainTag = '0x4a';
             const defaultAccount = '0x7567d83b7b8d80addcb281a71d54fc7b3364ffed';
             const thorUrl = 'http://localhost:8669';
