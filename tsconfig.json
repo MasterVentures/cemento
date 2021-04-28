@@ -11,10 +11,19 @@
         "experimentalDecorators": true,
         "preserveConstEnums": true,
         "emitDecoratorMetadata": true,
-        "declaration": true
-        
+        "declaration": true,
+        "skipLibCheck": true,
     },
-    "exclude": ["./node_modules", "**/*.spec.ts", "examples", "tests"],
+    "exclude": [
+        "node_modules",
+        "node_modules/*",
+        "./node_modules",
+        "./node_modules/*",
+        "./node_modules/@types/node/index.d.ts",
+        "**/*.spec.ts",
+        "examples",
+        "tests"
+    ],
     "include": [
         "./src",
         "./tests",
