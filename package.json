@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/decent-bet/solido.git"
+    "url": "git+https://github.com/MasterVentures/cemento.git"
   },
   "keywords": [
     "blockchain",
@@ -28,12 +28,12 @@
     "connex",
     "web3"
   ],
-  "author": "Decent.bet",
+  "author": "PaidNetwork",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/decent-bet/solido/issues"
+    "url": "https://github.com/MasterVentures/cemento/issues"
   },
-  "homepage": "https://github.com/decent-bet/solido#readme",
+  "homepage": "https://github.com/MasterVentures/cemento#readme",
   "devDependencies": {
     "@babel/core": "^7.13.15",
     "@babel/preset-typescript": "^7.13.0",
