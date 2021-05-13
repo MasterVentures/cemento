@@ -12,11 +12,7 @@ Code first contract entity mapper for Solidity based blockchains like Ethereum, 
 ### Ethereum
 `npm i -S @decent-bet/solido @decent-bet/solido-provider-web3`
 
-### Vechain (Connex Framework)
-`npm i -S @decent-bet/solido @decent-bet/solido-provider-connex`
 
-### Vechain (server side or mobile)
-`npm i -S @decent-bet/solido @decent-bet/solido-provider-thorify`
 
 ## What is solido
 
