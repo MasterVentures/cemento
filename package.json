@@ -1,5 +1,5 @@
 {
-  "name": "cemento",
+  "name": "cemento-paid",
   "version": "1.4.0",
   "description": "Code first contract entity mapper for Solidity based blockchains like Ethereum, Vechain, Tron",
   "main": "index.js",
