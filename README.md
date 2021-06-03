@@ -1,83 +1,66 @@
 # cemento
 
-Code first contract entity mapper for Solidity based blockchains like Ethereum, Vechain, Tron
+Web3 dapp layer based off DecentBet Solido
+
+## features
+
+- EVM and PolkadotJS ready
+- Supports Rosetta
+- Mocks
 
 
 ## Latest version
 
-`1.1.3`
+`0.2.0`
 
 ## Installing
 
-### Ethereum
+### EVM
 `npm i -S @decent-bet/solido @decent-bet/solido-provider-web3`
-
-### Vechain (Connex Framework)
-`npm i -S @decent-bet/solido @decent-bet/solido-provider-connex`
-
-### Vechain (server side or mobile)
-`npm i -S @decent-bet/solido @decent-bet/solido-provider-thorify`
-
-## What is solido
-
-Solido is a contract entity mapper, which annotates a Solidity contract based from its generated ABI. Once a contract is annotated with decorators or auto generated, you can enable it to a blockchain by using a plugin vendor.
-
-The pluggable architecture allows different scenarios:
-
-- Server side applications can use a HSM private key based plugin to sign.
-- Client side DApps can use specific client wallet like Comet or Metamask.
-- Mobile Dapps
 
 ## Examples
 
 ### Setup:
 
 ```typescript
-import { Framework } from '@vechain/connex-framework';
-import { DriverNodeJS } from '@vechain/connex.driver-nodejs';
+    const {AgreementContract} = testContractImport;
+    const {raw, address} = AgreementContract;
+    const {abi} = raw;
+    // Setting Cemento binder
+    const binder = {
+        contracts: [{
+            name: 'PaidEth',
+            abi,
+            address: address['rinkeby'],
+            connectionName: ['Rinkeby'],
+            enableMock: true,
+            mock: MockObj
+      },{
+            name: 'PaidBSC',
+            abi,
+            address: address['bsctestnet'],
+            connectionName: ['BSC testnet'],
+      }],
+      connections: [{
+            provider: Web3Plugin,
+            chainId: '4',
+            name: 'Rinkeby',
+      },{
+            provider: BSCPlugin,
+            chainId: '97',
+            name: 'BSC testnet',
+      }]
+    };
+    // Setting Cemento Module Config
+    config = {
+        'Paid': binder,
+    };
 
-import {
-  SolidoModule,
-} from '@decent-bet/solido';
-import {
- ConnexPlugin,
- ConnexSettings,
-} from '@decent-bet/solido-provider-connex';
-import {
- ThorifyPlugin,
- ThorifySettings,
-} from '@decent-bet/solido-provider-thorify';
-import { EnergyTokenContract, EnergyContractImport } from './EnergyContract';
-import Web3 from 'web3';
-const { thorify } = require('thorify');
+const module = new CementoModule(config);
 
-// Create Solido Module
-export const module = new SolidoModule(
-  [
-    {
-      name: 'ConnexToken',
-      import: EnergyContractImport,
-      entity: EnergyTokenContract,
-      provider: ConnexPlugin,
-    },
-    {
-      name: 'ThorifyToken',
-      import: EnergyContractImport,
-      entity: EnergyTokenContract,
-      enableDynamicStubs: true,
-      provider: ThorifyPlugin,
-    }
-  ],
-);
+const contracts = module.bindContracts({
 
-const privateKey = '0x............';
-const chainTag = '0x4a';
-const defaultAccount = '0x...........';
-const thorUrl = 'http://localhost:8669';
-
-const thor = thorify(new Web3(), thorUrl);
-
-const contracts = module.bindContracts();
+});
 const token = contracts.getContract<EnergyTokenContract>('ThorifyToken');
 token.onReady<ThorifySettings>({
   privateKey,
