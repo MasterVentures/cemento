@@ -128,6 +128,7 @@ export interface CementoBindContract {
 export interface CementoConnection {
     provider: Object;
     chainId: string;
+    network: string;
     defaultAccount?: string;
     name: string;
 }
