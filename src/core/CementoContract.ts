@@ -14,6 +14,11 @@ export interface CementoContract {
     address: string;
     defaultAccount: string;
     chainId: string;
+    network: string;
+    abi: object;
+    name: string;
+    isContractFactory?: boolean;
+    connectionName: string[];
 
     /**
      * Describes a contract chain tag, address and owner
@@ -58,19 +63,7 @@ export interface CementoContract {
     getEvent<T>(name: string): T;
 
     /**
-     * OnReady setups configuration to a blockchain
-     * @param settings 
-     */
-    onReady<T>(settings: T): void;
-
-    /**
-     * Configure provider instance settings for lazy loading
-     * @param settings 
-     */
-    setInstanceOptions(settings: ProviderInstance): void;
-
-    /**
-     * Connects contract previously configured with setInstanceOptions
+     * Connects contract
      */
     connect(): void;
 

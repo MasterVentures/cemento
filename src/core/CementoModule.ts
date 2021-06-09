@@ -101,15 +101,6 @@ export class CementoModule {
         // and multiple providers
         // use short module syntax
         if (Object.keys(this.binderContext).length >= 1) {
-            //const c = this.contractMappings[0];
-            
-            // this.providers.forEach((provider) => {
-            //     const name = c.name;
-            //     if (!name) {
-            //         throw new Error('Must have a name for short module syntax');
-            //     }
-            //     this.bindContract(provider, c, coll, true, setupOptions);
-            // })
             // Get First Binder
             const firstKey = Object.keys(this.binderContext)[0];
             let context = this.binderContext[firstKey];
@@ -151,26 +142,21 @@ export class CementoModule {
         init.prototype = Object.create(classFactory.prototype);
 
         // Apply provider and CementoProvider Plugin to entity type
-        applyMixins(init, [{prototype: { chainId: provider.chainId, defaultAccount: provider.defaultAccount}}, provider.provider, CementoProvider]);
+        applyMixins(init, [
+            {
+                prototype: { 
+                    ...provider,
+                    ...contractDefinition,
+                }
+            }, 
+            provider.provider, 
+            CementoProvider
+        ]);
         const instance = new init();
         instance.setBindContract(contractDefinition);
         instance.buildDynamicStubs();
 
-        // let name = contractDefinition.name;
-        // const providerKeyName = instance.getProviderType();
-        // const providerName = CementoProviderType[providerKeyName];
-        // if (generateName) {
-        //     name = `${providerName}${c.name}`;
-        // }
         const contract = instance as CementoContract & CementoProvider;
-
-        if (setupOptions) {
-            // find provider instance options
-            // const instanceOptions = setupOptions[providerKeyName];
-            // if (instanceOptions) {
-            //     contract.setInstanceOptions(instanceOptions);
-            // }
-        }
 
         return contract;
     }

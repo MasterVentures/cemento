@@ -40,6 +40,7 @@ beforeEach(() => {
         provider: PluginTest,
         chainId: '4',
         name: 'Ethereum Testnet Rinkeby',
+        network: 'https://infura.io',
     };
     //Setting Cemento binder
     cementoBinder = {
