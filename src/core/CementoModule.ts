@@ -151,17 +151,12 @@ export class CementoModule {
         init.prototype = Object.create(classFactory.prototype);
 
         // Apply provider and CementoProvider Plugin to entity type
+        // TODO: Interface
         applyMixins(init, [{prototype: { chainId: provider.chainId, defaultAccount: provider.defaultAccount}}, provider.provider, CementoProvider]);
         const instance = new init();
         instance.setBindContract(contractDefinition);
         instance.buildDynamicStubs();
 
-        // let name = contractDefinition.name;
-        // const providerKeyName = instance.getProviderType();
-        // const providerName = CementoProviderType[providerKeyName];
-        // if (generateName) {
-        //     name = `${providerName}${c.name}`;
-        // }
         const contract = instance as CementoContract & CementoProvider;
 
         if (setupOptions) {

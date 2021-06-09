@@ -1,4 +1,4 @@
-import { CementoBindContract, CementoProviderType } from '../types';
+import { CementoBindContract, CementoConnection, CementoProviderType } from '../types';
 import { TopicSignature } from './TopicSignature';
 import { _Read, _Write, _GetEvent } from '../decorators';
 
@@ -46,7 +46,8 @@ export abstract class CementoProvider {
         }
     }
 
-    protected setBindContract(bindContract: CementoBindContract): void {
+    protected setBindContract(bindContract: CementoBindContract & 
+        CementoConnection): void {
         this.abi = bindContract.abi as any;
         this.bindContract = bindContract;
 
